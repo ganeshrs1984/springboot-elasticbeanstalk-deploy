@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_profile" default="compile.module.profile">
+  <dirname property="module.profile.basedir" file="${ant.file.module_profile}"/>
+  
+  <property name="module.jdk.home.profile" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.profile" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.profile" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.profile" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="profile.output.dir" value="${module.profile.basedir}/out/production/profile"/>
+  <property name="profile.testoutput.dir" value="${module.profile.basedir}/out/test/profile"/>
+  
+  <path id="profile.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="profile.module.production.classpath">
+    <path refid="${module.jdk.classpath.profile}"/>
+  </path>
+  
+  <path id="profile.runtime.production.module.classpath">
+    <pathelement location="${profile.output.dir}"/>
+  </path>
+  
+  <path id="profile.module.classpath">
+    <path refid="${module.jdk.classpath.profile}"/>
+    <pathelement location="${profile.output.dir}"/>
+  </path>
+  
+  <path id="profile.runtime.module.classpath">
+    <pathelement location="${profile.testoutput.dir}"/>
+    <pathelement location="${profile.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.profile">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.profile">
+    <patternset refid="excluded.from.module.profile"/>
+  </patternset>
+  
+  
+  <target name="compile.module.profile" depends="compile.module.profile.production,compile.module.profile.tests" description="Compile module profile"/>
+  
+  <target name="compile.module.profile.production" depends="register.custom.compilers" description="Compile module profile; production classes"/>
+  
+  <target name="compile.module.profile.tests" depends="register.custom.compilers,compile.module.profile.production" description="compile module profile; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.profile" description="cleanup module">
+    <delete dir="${profile.output.dir}"/>
+    <delete dir="${profile.testoutput.dir}"/>
+  </target>
+</project>
